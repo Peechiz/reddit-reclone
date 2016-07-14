@@ -1,0 +1,19 @@
+body {
+  padding-top: 70px;
+}
+
+.post-controls .post-control {
+  margin: 0 10px;
+}
+
+.post img {
+  margin-right: 15px;
+}
+
+.post h3 i {
+  font-size: .8em;
+}
+
+.newComment {
+  margin: 2rem 0 0 215px;
+}
