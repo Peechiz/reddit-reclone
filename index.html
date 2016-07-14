@@ -28,7 +28,7 @@
 
 <body ng-controller="newPostController as np">
 
-  <div class="navbar navbar-default navbar-fixed-top">
+  <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
       <ul class="nav navbar-nav">
         <li class="navbar-brand">Reddit Clone</li>
@@ -41,16 +41,22 @@
           </form>
         </li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sort by Votes <span class="caret" ></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sort by {{np.prop | capitolize}}</a>
           <ul class="dropdown-menu">
-            <li><a href="#">Sort by Votes</a></li>
-            <li><a href="#">Sort by Date</a></li>
-            <li><a href="#">Sort by Title</a></li>
+            <li><a href="#" ng-init="np.prop='score'" ng-click="np.prop='score'">Sort by Score</a></li>
+            <li><a href="#" ng-click="np.prop='date'">Sort by Date</a></li>
+            <li><a href="#" ng-click="np.prop='title'">Sort by Title</a></li>
           </ul>
+        </li>
+        <li>
+          <a href="#" ng-click="np.reverse = !np.reverse">
+            <span ng-if="np.reverse" class="glyphicon glyphicon-chevron-up" ></span>
+            <span ng-if="!np.reverse" class="glyphicon glyphicon-chevron-down" ></span>
+          </a>
         </li>
       </ul>
     </div>
-  </div> <!-- end navbar -->
+  </nav> <!-- end navbar -->
 
   <div ng-show="np.addPost"> <!-- New Post -->
     <div class="container">
@@ -85,7 +91,7 @@
 
 <!-- display all posts -->
 
-      <div ng-repeat="post in np.posts" class="well clearfix post">
+      <div ng-init="np.reverse = true" ng-repeat="post in np.posts | orderBy:np.prop:np.reverse" class="well clearfix post">
         <img ng-src="{{post.img}}" class="pull-left">
         <h3>{{post.title}} | <i ng-click="post.score = post.score + 1" class="glyphicon glyphicon-arrow-up"></i> <i ng-click="post.score = post.score -1" class="glyphicon glyphicon-arrow-down"></i> <span ng-class="{'text-success': post.score > 0, 'text-danger': post.score < 0}">{{post.score}}</span> </h3>
         <h4>by {{post.author}}</h4>
@@ -96,9 +102,11 @@
           </span>
            |
           <span class="post-control">
-            <i class="glyphicon glyphicon-comment"></i> {{post.comments.length}}
-            <span ng-show="post.comments.length!=1">comments</span>
-            <span ng-show="post.comments.length==1">comment</span>
+            <a href="#" ng-init="post.showComments = false" ng-click="post.showComments = !post.showComments">
+              <i class="glyphicon glyphicon-comment"></i> {{post.comments.length}}
+              <span ng-show="post.comments.length!=1">comments</span>
+              <span ng-show="post.comments.length==1">comment</span>
+            </a>
           </span>
            |
            <span class="post-control">
@@ -123,8 +131,8 @@
         </div>
 
 <!-- Show Comments -->
-        <div ng-show="post.showComments">
-
+        <div ng-show="post.showComments" class="comments">
+          <p ng-repeat="c in post.comments"><strong>{{c.author}}</strong> - {{c.comment}}</p>
         </div>
 
       </div>
