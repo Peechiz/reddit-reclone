@@ -2,6 +2,14 @@ var app = angular.module('reddit',[]);
 
 app.controller('newPostController',post)
 
+angular.
+  module('reddit').
+  filter('capitolize', function() {
+    return function(input) {
+      return input.charAt(0).toUpperCase() + input.slice(1);
+    };
+  });
+
 function post(){
   var np = this;
 
@@ -12,8 +20,47 @@ function post(){
       img: 'http://fillmurray.com/200/200',
       desc: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       score: 5,
-      comments: []
-    }
+      comments: [
+        {
+          author: 'jim',
+          comment: 'I see'
+        },
+        {
+          author: 'bob',
+          comment: 'Me too, I also see.'
+        }
+      ]
+    },
+    {
+      title: 'I am a Mad Man',
+      author: 'Nick Cage',
+      img: 'http://placecage.com/c/200/200',
+      desc: "OH, NO! NOT THE BEES! NOT THE BEES! AAAAAHHHHH! OH, THEY'RE IN MY EYES! MY EYES! AAAAHHHHH! AAAAAGGHHH!",
+      score: -4,
+      comments: [
+        {
+          author: 'michael bluth',
+          comment: 'you suck'
+        },
+        {
+          author: 'Bill Murray',
+          comment: 'Yes, he does'
+        }
+      ]
+    },
+    {
+      title: 'A',
+      author: 'Bill Murray',
+      img: 'http://placebear.com/200/200',
+      desc: "this title is first alphabetically",
+      score: 0,
+      comments: [
+        {
+          author: 'jim',
+          comment: 'I see'
+        },
+      ]
+    },
   ];
 
   var clearForm = function(){
@@ -28,6 +75,7 @@ function post(){
     np.commentAuthor = null;
     np.commentText = null;
     post.addComment = false;
+    post.showComments = true;
   }
 
   np.newPost = function(){
