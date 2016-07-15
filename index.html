@@ -7,6 +7,8 @@
 
   <!-- Angular -->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.js"></script>
 
   <!-- Jquery -->
   <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
@@ -28,15 +30,20 @@
 
 <body ng-controller="newPostController as np">
 
+<!--********-->
+<!-- Navbar -->
+<!--********-->
+
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
       <ul class="nav navbar-nav">
         <li class="navbar-brand">Reddit Clone</li>
-        <li><a href="#" ng-init="np.addPost = false" ng-click="np.addPost = !np.addPost"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Submit Post</a></li>
+        <li>
+          <a href="#" ng-init="np.addPost = false"ng-click="np.addPost = !np.addPost"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Submit Post</a></li>
         <li>
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
+              <input ng-model="np.searchTerm.$" type="text" class="form-control" placeholder="Search">
             </div>
           </form>
         </li>
@@ -50,34 +57,89 @@
         </li>
         <li>
           <a href="#" ng-click="np.reverse = !np.reverse">
-            <span ng-if="np.reverse" class="glyphicon glyphicon-chevron-up" ></span>
-            <span ng-if="!np.reverse" class="glyphicon glyphicon-chevron-down" ></span>
+            <span ng-if="!np.reverse" class="glyphicon glyphicon-chevron-up" ></span>
+            <span ng-if="np.reverse" class="glyphicon glyphicon-chevron-down" ></span>
           </a>
         </li>
       </ul>
     </div>
-  </nav> <!-- end navbar -->
+  </nav>
 
-  <div ng-show="np.addPost"> <!-- New Post -->
+
+<!--**********-->
+<!-- New Post -->
+<!--**********-->
+
+  <div ng-show="np.addPost">
     <div class="container">
-      <form ng-submit="np.newPost()">
-        <!-- TODO add form validation-->
-        <div class="form-group">
-          <label for="title">Title: </label>
-          <input ng-model="np.title" class="form-control" type="text" name="title" id="title" >
+      <form ng-submit="np.newPost()" name="addPost">
+
+        <!-- Post Title -->
+        <div class="form-group" ng-class="{'has-error': addPost.title.$invalid && !addPost.title.$pristine, 'has-success': addPost.title.$valid}">
+
+          <label class="control-label" for="title">Title: </label>
+          <input class="form-control" type="text" name="title" id="title"
+            placeholder="My great post"
+            ng-model="np.title"
+            ng-minlength="4"
+            required>
+
+          <div ng-messages="addPost.title.$error" ng-show="addPost.title.$touched">
+            <p class="help-block" ng-message="required">Please add a Title</p>
+            <p class="help-block" ng-message="minlength">Title is too short</p>
+          </div>
+
         </div>
-        <div class="form-group">
-          <label for="author">Author: </label>
-          <input ng-model="np.author" class="form-control" type="text" name="author" id="author" >
+
+        <!-- Post Author -->
+        <div class="form-group" ng-class="{'has-error': addPost.author.$invalid && !addPost.author.$pristine, 'has-success': addPost.author.$valid }">
+
+          <label class="control-label" for="author">Author: </label>
+          <input class="form-control" type="text" name="author" id="author"
+            placeholder="Nicolas Cage"
+            ng-model="np.author"
+            ng-minlength="4"
+            required>
+
+          <div ng-messages="addPost.author.$error" ng-show="addPost.author.$touched">
+            <small class="help-block" ng-message="required">Please add an Author</small>
+            <small class="help-block" ng-message="minlength">Author name is too short</small>
+          </div>
+
         </div>
-        <div class="form-group">
-          <label for="img">Image URL: </label>
-          <input ng-model="np.img" class="form-control" type="text" name="img" id="img" >
+
+        <!-- Post Image URL -->
+        <div class="form-group" ng-class="{'has-error': addPost.img.$invalid && !addPost.img.$pristine, 'has-success': addPost.img.$valid}">
+
+          <label class="control-label" for="img">Image URL: </label>
+          <input class="form-control" type="url" name="img" id="img"
+            placeholder="http://placecage.com/c/200/200"
+            ng-model="np.img"
+            required>
+
+            <div ng-messages="addPost.img.$error" ng-show="addPost.img.$touched">
+              <small class="help-block" ng-message="required">Please add an Image URL</small>
+              <small class="help-block" ng-message="url">Please enter a valid URL</small>
+            </div>
+
         </div>
-        <div class="form-group">
-          <label for="desc">Description: </label>
-          <textarea ng-model="np.desc" class="form-control" type="text" name="desc" id="desc" ></textarea>
+
+        <!-- Post Description -->
+        <div class="form-group" ng-class="{'has-error': addPost.desc.$invalid && !addPost.desc.$pristine, 'has-success': addPost.desc.$valid}">
+
+          <label class="control-label" for="desc">Description: </label>
+          <textarea class="form-control" type="text" name="desc" id="desc"
+            placeholder="Awesome information about my post"
+            ng-model="np.desc"
+            required></textarea>
+
+            <div ng-messages="addPost.desc.$error" ng-show="addPost.desc.$touched">
+              <small class="help-block" ng-message="required">Please add a description</small>
+            </div>
+
         </div>
+
+        <!-- Submit Post -->
         <div class="form-group">
           <input type="submit" class="btn btn-success">
         </div>
@@ -86,19 +148,26 @@
     </div>
   </div>
 
+
+<!--*******************-->
+<!-- display all posts -->
+<!--*******************-->
+
   <div>
     <div class="container">
 
-<!-- display all posts -->
-
-      <div ng-init="np.reverse = true" ng-repeat="post in np.posts | orderBy:np.prop:np.reverse" class="well clearfix post">
+      <div ng-init="np.reverse = true" ng-repeat="post in np.posts | filter:np.searchTerm | orderBy:np.prop:np.reverse" class="well clearfix post">
         <img ng-src="{{post.img}}" class="pull-left">
-        <h3>{{post.title}} | <i ng-click="post.score = post.score + 1" class="glyphicon glyphicon-arrow-up"></i> <i ng-click="post.score = post.score -1" class="glyphicon glyphicon-arrow-down"></i> <span ng-class="{'text-success': post.score > 0, 'text-danger': post.score < 0}">{{post.score}}</span> </h3>
+
+        <h3>{{post.title}} | <i ng-click="post.score = post.score + 1" class="glyphicon glyphicon-arrow-up"></i> <i ng-click="post.score = post.score -1" class="glyphicon glyphicon-arrow-down"></i> <span ng-class="{'text-success': post.score > 0, 'text-danger': post.score < 0}">{{post.score}}</span>
+        </h3>
+
         <h4>by {{post.author}}</h4>
         <p>{{post.desc}}</p>
+
         <div class="post-controls">
           <span class="post-control">
-            <i class="glyphicon glyphicon-calendar" aria-hidden="true"></i> Sunday, March 8, 2006
+            <i class="glyphicon glyphicon-calendar" aria-hidden="true"></i> {{post.date | date:'fullDate'}}
           </span>
            |
           <span class="post-control">
@@ -116,13 +185,35 @@
 
 <!-- new comment -->
         <div ng-show="post.addComment" class="newComment">
-          <form ng-submit="np.newComment(post)" class="form-inline">
-            <div class="form-group">
-              <label for="commentAuthor">Author: </label>
-              <input type="text" ng-model="np.commentAuthor" name="commentAuthor" id="commentAuthor" placeholder="username" class="form-control">
+          <form ng-submit="np.newComment(post)" class="form-inline" name="addComment">
 
-              <label for="comment">Text: </label>
-              <input type="text" ng-model="np.commentText" name="comment" placeholder="comment text" class="form-control">
+            <div class="form-group">
+
+              <span ng-class="{'has-error': addComment.commentAuthor.$invalid && !addComment.commentAuthor.$pristine, 'has-success': addComment.commentAuthor.$valid}">
+                <label class="control-label" for="commentAuthor">Author: </label>
+                <input type="text" name="commentAuthor" id="commentAuthor" class="form-control"
+                placeholder="username"
+                ng-model="np.commentAuthor"
+                ng-minlength="4"
+                required>
+
+                <span ng-messages="addComment.commentAuthor.$error" ng-show="addComment.commentAuthor.$touched">
+                  <small class="help-block" ng-message="required">Please add an Author</small>
+                  <small class="help-block" ng-message="minlength">Author name is too short</small>
+                </span>
+              </span>
+
+              <span ng-class="{'has-error': addComment.commentText.$invalid && !addComment.commentText.$pristine, 'has-success': addComment.commentText.$valid}">
+                <label class="control-label" for="commentText">Text: </label>
+                <input type="text" name="commentText" class="form-control" id="commentText"
+                placeholder="comment text"
+                ng-model="np.commentText"
+                required>
+
+                <span ng-messages="addComment.commentText.$error" ng-show="addComment.commentText.$touched">
+                  <small class="help-block" ng-message="required">Please add a Message</small>
+                </span>
+              </span>
 
               <input type="submit" value="Add Comment" class="btn btn-success">
             </div>
@@ -138,7 +229,7 @@
       </div>
 
     </div>
-  </div>
+  </div> <!-- End Display Posts -->
 
 </body>
 
