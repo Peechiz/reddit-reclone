@@ -1,4 +1,4 @@
-var app = angular.module('reddit',[]);
+var app = angular.module('reddit',['ngAnimate','ngMessages']);
 
 app.controller('newPostController',post)
 
@@ -20,6 +20,7 @@ function post(){
       img: 'http://fillmurray.com/200/200',
       desc: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       score: 5,
+      date: Date.now(),
       comments: [
         {
           author: 'jim',
@@ -37,6 +38,7 @@ function post(){
       img: 'http://placecage.com/c/200/200',
       desc: "OH, NO! NOT THE BEES! NOT THE BEES! AAAAAHHHHH! OH, THEY'RE IN MY EYES! MY EYES! AAAAHHHHH! AAAAAGGHHH!",
       score: -4,
+      date: 1468528486596,
       comments: [
         {
           author: 'michael bluth',
@@ -54,6 +56,7 @@ function post(){
       img: 'http://placebear.com/200/200',
       desc: "this title is first alphabetically",
       score: 0,
+      date: 1468528486596,
       comments: [
         {
           author: 'jim',
@@ -86,7 +89,8 @@ function post(){
       img: np.img,
       desc: np.desc,
       score: 0,
-      comments: []
+      comments: [],
+      date: Date.now()
     })
     console.log(np.posts);
     clearForm();
