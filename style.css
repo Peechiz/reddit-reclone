@@ -17,3 +17,31 @@ body {
 .newComment, .comments {
   margin: 2rem 0 0 215px;
 }
+
+
+.post.ng-enter {
+  transition:0.4s ease all;
+  opacity:0;
+  transform:translateX(-100%);
+}
+
+.post.ng-enter.ng-enter-active {
+  opacity:1;
+  transform:translateX(0);
+}
+
+.post.ng-leave {
+  transition:0.4s ease all;
+  opacity:1;
+  transform:translateX(0);
+}
+
+.post.ng-leave.ng-leave-active {
+  opacity:0;
+  transform:translateX(-100%);
+}
+
+.post.ng-enter-stagger, .ng-leave-stagger {
+  transition-delay: 0.2s;
+  transition-duration:0;
+}
